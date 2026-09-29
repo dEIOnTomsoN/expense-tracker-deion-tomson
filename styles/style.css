@@ -1224,6 +1224,12 @@ tbody td:last-child, thead th:last-child {
     .profile-button #profile-name {
         display: none;
     }
+    #view-transactions table {
+        table-layout: fixed;
+    }
+    #view-transactions tbody td:nth-child(3) {
+        min-width: 0;
+    }
     .transaction-form {
         grid-template-columns: 1fr;
     }
