@@ -213,7 +213,6 @@
       label = String(year);
     } else if (mode === 'weekly' || mode === 'today') {
       const anchor = periodAnchorInput.value || localDateValue(now);
-      const date = dateParts(anchor);
       if (mode === 'today') {
         start = anchor;
         end = anchor;
