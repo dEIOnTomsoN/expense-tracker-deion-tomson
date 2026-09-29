@@ -6,7 +6,7 @@ The application is built using **HTML, CSS, and JavaScript**. It uses browser **
 
 ---
 
-## 🚀 How to Run the Application
+##  How to Run the Application
 
 ### 1. Clone the Repository
 
@@ -53,9 +53,9 @@ After opening the application:
 
 ---
 
-# ✨ Website Features
+#  Website Features
 
-## 🔐 Account Management
+##  Account Management
 
 * Create an account locally.
 * Log in and log out of the application.
@@ -66,7 +66,7 @@ After opening the application:
 
 ---
 
-## 💰 Income & Expense Management
+##  Income & Expense Management
 
 Users can record and manage their financial transactions.
 
@@ -85,7 +85,7 @@ Features include:
 
 ---
 
-## 📊 Dashboard
+##  Dashboard
 
 The dashboard provides a detailed overview of the user's financial activity.
 
@@ -104,7 +104,7 @@ The dashboard allows users to quickly understand their current financial positio
 
 ---
 
-## 📈 Financial Analytics
+##  Financial Analytics
 
 ExI provides visual representations of financial information to make spending patterns easier to understand.
 
@@ -121,7 +121,7 @@ Charts are implemented using **Chart.js**.
 
 ---
 
-## 🧾 Transaction History & Filters
+##  Transaction History & Filters
 
 The application maintains a history of recorded transactions.
 
@@ -137,7 +137,7 @@ Users can:
 
 ---
 
-## 💾 Local Storage
+##  Local Storage
 
 ExI uses the browser's **Local Storage** to store account and transaction information.
 
@@ -153,7 +153,7 @@ This provides the following benefits:
 
 ---
 
-## 🎨 Light & Dark Themes
+##  Light & Dark Themes
 
 ExI provides theme customization for a better user experience.
 
@@ -166,22 +166,22 @@ Features include:
 
 ---
 
-## 📱 Responsive Web Design
+##  Responsive Web Design
 
 The application is designed to work across different screen sizes.
 
 ExI supports:
 
-* 🖥️ Desktop screens
-* 💻 Laptop screens
-* 📱 Mobile devices
-* 📲 Tablet screens
+*  Desktop screens
+*  Laptop screens
+*  Mobile devices
+*  Tablet screens
 
 The interface automatically adapts to different screen sizes to provide a consistent user experience.
 
 ---
 
-## ⚠️ Validation & Error Handling
+##  Validation & Error Handling
 
 The application includes input validation and helpful error messages.
 
@@ -198,7 +198,7 @@ This helps prevent invalid or incomplete information from being stored.
 
 ---
 
-# 🖥️ Application Screenshots
+#  Application Screenshots
 
 ## 1. Dashboard
 
@@ -240,7 +240,7 @@ ExI is designed to provide a responsive experience across desktop, tablet, and m
 
 ---
 
-# 🛠️ Technologies Used
+#  Technologies Used
 
 | Technology        | Purpose                                    |
 | ----------------- | ------------------------------------------ |
@@ -301,7 +301,7 @@ https://github.com/dEIOnTomsoN/expense-tracker-deion-tomson.git
 
 ---
 
-# 👨‍💻 Project
+#  Project
 
 ## ExI - Expense and Income Tracker
 
