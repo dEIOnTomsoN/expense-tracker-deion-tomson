@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#081b35">
+    <meta name="description" content="Sign in to your local ExI Expense and Income Tracker demo.">
+    <title>Sign in — ExI Expense and Income Tracker</title>
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
+    rel='stylesheet'>
+
+    <link rel="stylesheet" href="./styles/style_2.css">
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <span class="rotate-bg"></span>
+        <span class="rotate-bg2"></span>
+
+        <div class="form-box login">
+            <h2 class="title animation" style="--i:0; --j:21">Login</h2>
+            <form id="login-form" novalidate>
+
+                <div class="input-box animation" style="--i:1; --j:22">
+                    <input id="login-username" name="username" type="text" autocomplete="username" placeholder=" " required>
+                    <label for="login-username">Username</label>
+                    <i class='bx bxs-user'></i>
+                </div>
+
+                <div class="input-box animation" style="--i:2; --j:23">
+                    <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder=" " required>
+                    <label for="login-password">Password</label>
+                    <button class="password-toggle" type="button" data-password-target="login-password" aria-label="Show password" title="Show password">
+                        <i class='bx bx-show' aria-hidden="true"></i>
+                    </button>
+                </div>
+                <button type="submit" class="btn animation" style="--i:3; --j:24">Login</button>
+                <p class="auth-message" id="login-message" role="status" aria-live="polite"></p>
+                <div class="linkTxt animation" style="--i:5; --j:25">
+                    <p>Don't have an account? <a href="#" class="register-link">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="info-text login">
+            <h2 class="animation" style="--i:0; --j:20">Welcome Back!</h2>
+                <p class="animation" style="--i:1; --j:21">Manage your everyday spending and income in one clear view.</p>
+        </div>
+
+
+
+
+
+
+
+        <div class="form-box register">
+
+            <h2 class="title animation" style="--i:17; --j:0">Sign Up</h2>
+
+            <form id="register-form" novalidate>
+
+                <div class="input-box animation" style="--i:18; --j:1">
+                    <input id="register-username" name="username" type="text" minlength="2" maxlength="80" autocomplete="username" placeholder=" " required>
+                    <label for="register-username">Username</label>
+                    <i class='bx bxs-user'></i>
+                </div>
+
+                <div class="input-box animation" style="--i:19; --j:2">
+                    <input id="register-email" name="email" type="email" autocomplete="email" placeholder=" " required>
+                    <label for="register-email">Email</label>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+
+                <div class="input-box animation" style="--i:20; --j:3">
+                    <input id="register-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder=" " required>
+                    <label for="register-password">Password</label>
+                    <button class="password-toggle" type="button" data-password-target="register-password" aria-label="Show password" title="Show password">
+                        <i class='bx bx-show' aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="input-box animation" style="--i:21; --j:4">
+                    <input id="register-confirm-password" name="confirmPassword" type="password" minlength="6" autocomplete="new-password" placeholder=" " required>
+                    <label for="register-confirm-password">Confirm Password</label>
+                    <button class="password-toggle" type="button" data-password-target="register-confirm-password" aria-label="Show password" title="Show password">
+                        <i class='bx bx-show' aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <button type="submit" class="btn animation" style="--i:22;--j:5">Sign Up</button>
+                <p class="auth-message" id="register-message" role="status" aria-live="polite"></p>
+
+                <div class="linkTxt animation" style="--i:23; --j:6">
+                    <p>Already have an account? <a href="#" class="login-link">Login</a></p>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="info-text register">
+            <h2 class="animation" style="--i:17; --j:0;">Welcome Back!</h2>
+            <p class="animation" style="--i:18; --j:1;">Create your account to open your personal dashboard.</p>
+        </div>
+
+    </div>
+
+
+    <!-- Load shared state before the login and registration controller. -->
+    <script defer src="./js/state.js"></script>
+    <script defer src="./js/script_1.js"></script>
+</body>
+
+</html> 

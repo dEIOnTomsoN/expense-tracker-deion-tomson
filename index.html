@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="A private, browser-based personal finance tracker.">
+  <title>ExI— Personal Finance</title>
+  <link rel="stylesheet" href="./styles/style.css">
+  <!-- Load shared data and row rendering before the dashboard controller. -->
+  <script defer src="./js/state.js"></script>
+  <script defer src="./js/components/transactions.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script defer src="./js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="ExI home">
+        <span class="brand-mark" aria-hidden="true">ExI</span>
+        <span>ExI TRACKER</span>
+      </a>
+      <div class="topbar-actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode" aria-pressed="false">
+          <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+        </button>
+        <button class="profile-button" id="profile-button" type="button" aria-label="Set display name">
+          <span class="avatar" id="profile-avatar" aria-hidden="true">G</span>
+          <span id="profile-name">Guest</span>
+        </button>
+        <button class="button button-secondary logout-button" id="logout-button" type="button">Log out</button>
+      </div>
+    </header>
+
+    <nav class="main-tabs" aria-label="Main sections" role="tablist">
+      <button class="main-tab is-active" id="tab-dashboard" type="button" role="tab" aria-selected="true" aria-controls="view-dashboard" data-view="dashboard">Dashboard</button>
+      <button class="main-tab" id="tab-add-expense" type="button" role="tab" aria-selected="false" aria-controls="view-add-transaction" data-view="add-expense">Add Transaction</button>
+      <button class="main-tab" id="tab-transactions" type="button" role="tab" aria-selected="false" aria-controls="view-transactions" data-view="transactions">History</button>
+    </nav>
+
+    <main id="main-content" class="main-content">
+      <section id="view-dashboard" class="app-view" role="tabpanel" aria-labelledby="tab-dashboard">
+      <section class="page-heading" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">YOUR MONEY, IN FOCUS</p>
+          <h1 id="page-title">Overview</h1>
+          <p class="page-subtitle">A clear picture of what came in and what went out.</p>
+        </div>
+        <div class="dashboard-period-controls" aria-label="Filter dashboard by date">
+          <label class="sr-only" for="period-mode">Dashboard period</label>
+          <select id="period-mode" aria-label="Dashboard period">
+            <option value="overall">Overall</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="weekly">Weekly</option>
+            <option value="today">Today</option>
+            <option value="custom">Date range</option>
+          </select>
+          <div class="period-control" id="period-calendar-controls">
+            <label class="sr-only" for="period-month">Month</label>
+            <select id="period-month" name="month" aria-label="Select month">
+              <option value="1">January</option><option value="2">February</option>
+              <option value="3">March</option><option value="4">April</option>
+              <option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option>
+              <option value="9">September</option><option value="10">October</option>
+              <option value="11">November</option><option value="12">December</option>
+            </select>
+            <label class="sr-only" for="period-year">Year</label>
+            <select id="period-year" name="year" aria-label="Select year"></select>
+          </div>
+          <div class="period-control" id="period-anchor-control" hidden>
+            <label class="sr-only" for="period-anchor">Date within period</label>
+            <input id="period-anchor" type="date" aria-label="Date within period">
+          </div>
+          <div class="period-control" id="period-range-controls" hidden>
+            <label class="sr-only" for="period-start">Start date</label>
+            <input id="period-start" type="date" aria-label="Start date">
+            <label class="sr-only" for="period-end">End date</label>
+            <input id="period-end" type="date" aria-label="End date">
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Financial summary">
+        <article class="summary-card summary-card--interactive" id="summary-income-card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="transaction-details-dialog" data-details-type="income">
+          <div class="summary-card-top"><span class="summary-label">Total income</span><span class="summary-icon summary-icon--income" aria-hidden="true">↙</span></div>
+          <p class="summary-value" id="total-income">₹0</p>
+          <p class="summary-note" id="income-caption">Selected period</p>
+        </article>
+        <article class="summary-card summary-card--interactive" id="summary-expense-card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="transaction-details-dialog" data-details-type="expense">
+          <div class="summary-card-top"><span class="summary-label">Total expenses</span><span class="summary-icon summary-icon--expense" aria-hidden="true">↗</span></div>
+          <p class="summary-value" id="total-expense">₹0</p>
+          <p class="summary-note" id="expense-caption">Selected period</p>
+        </article>
+        <article class="summary-card summary-card--balance">
+          <div class="summary-card-top"><span class="summary-label">Current balance</span><span class="summary-icon summary-icon--balance" aria-hidden="true">＝</span></div>
+          <p class="summary-value" id="current-balance">₹0</p>
+          <p class="summary-note" id="balance-caption">Income minus expenses</p>
+        </article>
+        <article class="summary-card">
+          <div class="summary-card-top"><span class="summary-label">Transactions</span><span class="summary-icon summary-icon--balance" aria-hidden="true">▦</span></div>
+          <p class="summary-value" id="period-count">0</p>
+          <p class="summary-note" id="period-count-caption">In selected period</p>
+        </article>
+      </section>
+
+      <section class="insights-grid" aria-label="Spending insights">
+        <article class="panel chart-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">CASH FLOW</p><h2 id="chart-title">Daily activity</h2></div>
+            <div class="chart-legend" aria-label="Chart legend">
+              <span><i class="legend-dot legend-dot--income"></i>Income</span>
+              <span><i class="legend-dot legend-dot--expense"></i>Expenses</span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-tooltip" id="chart-tooltip" role="status" aria-live="polite" hidden>
+              <strong id="chart-tooltip-period"></strong>
+              <span><i class="legend-dot legend-dot--income" aria-hidden="true"></i>Income <b id="chart-tooltip-income">₹0</b></span>
+              <span><i class="legend-dot legend-dot--expense" aria-hidden="true"></i>Expenses <b id="chart-tooltip-expense">₹0</b></span>
+            </div>
+            <canvas id="trend-chart" role="application" tabindex="0" aria-label="Cash flow chart. Use left and right arrow keys to inspect periods, up and down to choose income or expenses, and Enter to open matching transactions.">
+              A chart of income and expenses for the selected period.
+            </canvas>
+          </div>
+          <p class="chart-caption" id="chart-caption">Add transactions to see your monthly activity.</p>
+        </article>
+
+        <article class="panel categories-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">WHERE IT GOES</p><h2>Expense categories</h2></div>
+          </div>
+          <div class="category-chart-wrap">
+            <canvas id="category-chart" role="img" aria-label="Expense totals by category"></canvas>
+            <p class="muted-message chart-fallback" id="chart-fallback" hidden>Chart.js did not load. Category totals are listed below.</p>
+          </div>
+          <div id="category-breakdown" class="category-breakdown" aria-live="polite">
+            <p class="muted-message">Your expense categories will appear here.</p>
+          </div>
+        </article>
+      </section>
+      </section>
+
+      <section id="view-add-transaction" class="app-view" role="tabpanel" aria-labelledby="tab-add-expense" hidden>
+        <section class="panel transactions-panel" aria-labelledby="entry-title">
+          <div class="panel-heading transactions-heading">
+            <div><p class="eyebrow">RECORD AN ENTRY</p><h2 id="entry-title">Add Transaction</h2></div>
+          </div>
+          <form id="transaction-form" class="transaction-form" novalidate>
+            <div class="field-group field-type">
+              <label for="transaction-type">Type</label>
+              <select id="transaction-type" name="type" required>
+                <option value="expense">Expense</option><option value="income">Income</option>
+              </select>
+            </div>
+            <div class="field-group field-amount">
+              <label for="transaction-amount">Amount</label>
+              <div class="input-with-prefix"><span aria-hidden="true">₹</span><input id="transaction-amount" name="amount" type="number" min="0.00" step="50" placeholder="0.00" inputmode="decimal" aria-describedby="error-transaction-amount"></div>
+              <span class="field-error" id="error-transaction-amount" data-error-for="transaction-amount" aria-live="polite"></span>
+            </div>
+            <div class="field-group field-date">
+              <label for="transaction-date">Date</label>
+              <input id="transaction-date" name="date" type="date" aria-describedby="error-transaction-date">
+              <span class="field-error" id="error-transaction-date" data-error-for="transaction-date" aria-live="polite"></span>
+            </div>
+            <div class="field-group field-category">
+              <label for="transaction-category">Category</label>
+              <select id="transaction-category" name="category" aria-describedby="error-transaction-category">
+                <option value="Food">Food</option><option value="Housing">Housing</option>
+                <option value="Transportation">Transportation</option><option value="Utilities">Utilities</option>
+                <option value="Shopping">Shopping</option><option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option><option value="Entertainment">Entertainment</option>
+                <option value="Travel">Travel</option><option value="Other">Other</option>
+              </select>
+              <span class="field-error" id="error-transaction-category" data-error-for="transaction-category" aria-live="polite"></span>
+            </div>
+            <div class="field-group field-note">
+              <label for="transaction-description">Description</label>
+              <input id="transaction-description" name="description" type="text" maxlength="240" placeholder="What was it for?" aria-describedby="error-transaction-description">
+              <span class="field-error" id="error-transaction-description" data-error-for="transaction-description" aria-live="polite"></span>
+            </div>
+            <button class="button button-primary field-submit" id="transaction-submit" type="submit"><span aria-hidden="true">＋</span> Save transaction</button>
+            <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </section>
+
+      <section id="view-transactions" class="app-view" role="tabpanel" aria-labelledby="tab-transactions" hidden>
+      <section class="panel transactions-panel" aria-labelledby="transactions-title">
+        <div class="panel-heading transactions-heading">
+          <div><p class="eyebrow">THE LEDGER</p><h2 id="transactions-title">Transactions</h2></div>
+          <span class="transaction-count" id="transaction-count">0 entries</span>
+        </div>
+
+        <div class="history-toolbar" aria-label="Filter transaction history">
+          <div class="field-group">
+            <label for="history-period">Period</label>
+            <select id="history-period">
+              <option value="overall">Overall</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="weekly">Weekly</option>
+              <option value="today">Today</option>
+              <option value="custom">Date range</option>
+            </select>
+          </div>
+          <div class="field-group" id="history-month-control" hidden>
+            <label for="history-month">Month</label>
+            <input id="history-month" type="month">
+          </div>
+          <div class="field-group" id="history-year-control" hidden>
+            <label for="history-year">Year</label>
+            <select id="history-year"></select>
+          </div>
+          <div class="field-group" id="history-anchor-control" hidden>
+            <label for="history-anchor">Date within period</label>
+            <input id="history-anchor" type="date">
+          </div>
+          <div class="history-date-range" id="history-range-controls" hidden>
+            <label class="sr-only" for="history-start">Start date</label>
+            <input id="history-start" type="date" aria-label="History start date">
+            <label class="sr-only" for="history-end">End date</label>
+            <input id="history-end" type="date" aria-label="History end date">
+          </div>
+          <div class="field-group">
+            <label for="history-type">Type</label>
+            <select id="history-type">
+              <option value="all">All types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="history-category">Category</label>
+            <select id="history-category"><option value="all">All categories</option></select>
+          </div>
+          <p id="filter-result-count" class="filter-result-count" aria-live="polite"></p>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Date</th><th scope="col">Description</th><th scope="col">Category</th><th scope="col">Type</th><th scope="col">Amount</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody id="transaction-rows"></tbody>
+          </table>
+        </div>
+      </section>
+      </section>
+
+    </main>
+
+    <dialog class="details-dialog" id="transaction-details-dialog" aria-labelledby="details-dialog-title">
+      <div class="details-dialog-content">
+        <header class="details-dialog-header">
+          <div>
+            <p class="eyebrow">TRANSACTION BREAKDOWN</p>
+            <h2 id="details-dialog-title">Income Details</h2>
+            <p class="details-description" id="details-description">Income transactions</p>
+          </div>
+          <button class="button button-secondary" id="details-close" type="button">Back to dashboard</button>
+        </header>
+
+        <div class="details-filters" aria-label="Filter detailed transactions">
+          <div class="field-group">
+            <label for="details-category-filter">Category</label>
+            <select id="details-category-filter"><option value="all">All categories</option></select>
+          </div>
+          <div class="field-group">
+            <label for="details-start-filter">Start date</label>
+            <input id="details-start-filter" type="date">
+          </div>
+          <div class="field-group">
+            <label for="details-end-filter">End date</label>
+            <input id="details-end-filter" type="date">
+          </div>
+          <button class="button button-secondary details-reset" id="details-reset-filters" type="button">Reset filters</button>
+        </div>
+
+        <section class="details-chart-section" aria-labelledby="details-chart-heading">
+          <div class="details-chart-column">
+            <div class="details-section-heading">
+              <h3 id="details-chart-heading">Category breakdown</h3>
+              <p id="details-total" class="details-total">₹0</p>
+            </div>
+            <div class="details-chart-wrap">
+              <canvas id="details-category-chart" role="img" aria-label="Filtered transaction totals by category"></canvas>
+              <p class="muted-message" id="details-chart-fallback" hidden></p>
+            </div>
+          </div>
+          <div class="details-category-breakdown" id="details-category-breakdown" aria-live="polite"></div>
+        </section>
+
+        <section class="details-list-section" aria-labelledby="details-list-heading">
+          <div class="details-section-heading">
+            <h3 id="details-list-heading">Matching transactions</h3>
+            <p id="details-result-count" class="details-result-count" aria-live="polite">0 transactions</p>
+          </div>
+          <div class="table-scroll">
+            <table class="details-table">
+              <thead><tr><th scope="col">Date</th><th scope="col">Category</th><th scope="col">Description</th><th scope="col">Amount</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+              <tbody id="details-transaction-rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </dialog>
+
+    <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="profile-dialog-title">
+      <form id="profile-form" method="dialog">
+        <p class="eyebrow">LOCAL PROFILE</p>
+        <h2 id="profile-dialog-title">Choose a display name</h2>
+        <p class="dialog-copy">This name is only stored in this browser. It is not a sign-in or secure account.</p>
+        <label class="dialog-label" for="display-name-input">Display name</label>
+        <input id="display-name-input" name="displayName" type="text" maxlength="80" autocomplete="nickname" placeholder="Guest">
+        <div class="dialog-actions">
+          <button class="button button-secondary" id="cancel-profile" type="button">Cancel</button>
+          <button class="button button-primary" type="submit">Save name</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="profile-dialog edit-dialog" id="edit-transaction-dialog" aria-labelledby="edit-dialog-title">
+      <form id="edit-transaction-form" novalidate>
+        <p class="eyebrow">UPDATE LEDGER</p>
+        <h2 id="edit-dialog-title">Edit transaction</h2>
+        <input id="edit-transaction-id" name="id" type="hidden">
+        <div class="edit-form-grid">
+          <div class="field-group">
+            <label for="edit-type">Type</label>
+            <select id="edit-type" name="type"><option value="expense">Expense</option><option value="income">Income</option></select>
+          </div>
+          <div class="field-group">
+            <label for="edit-amount">Amount</label>
+            <input id="edit-amount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" aria-describedby="error-edit-amount">
+            <span class="field-error" id="error-edit-amount" data-error-for="edit-amount" aria-live="polite"></span>
+          </div>
+          <div class="field-group">
+            <label for="edit-date">Date</label>
+            <input id="edit-date" name="date" type="date" aria-describedby="error-edit-date">
+            <span class="field-error" id="error-edit-date" data-error-for="edit-date" aria-live="polite"></span>
+          </div>
+          <div class="field-group">
+            <label for="edit-category">Category</label>
+            <select id="edit-category" name="category" aria-describedby="error-edit-category">
+              <option value="Food">Food</option><option value="Housing">Housing</option>
+              <option value="Transportation">Transportation</option><option value="Utilities">Utilities</option>
+              <option value="Shopping">Shopping</option><option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option><option value="Entertainment">Entertainment</option>
+              <option value="Travel">Travel</option><option value="Other">Other</option>
+            </select>
+            <span class="field-error" id="error-edit-category" data-error-for="edit-category" aria-live="polite"></span>
+          </div>
+          <div class="field-group edit-description-field">
+            <label for="edit-description">Description</label>
+            <input id="edit-description" name="description" type="text" maxlength="240" aria-describedby="error-edit-description">
+            <span class="field-error" id="error-edit-description" data-error-for="edit-description" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="dialog-actions">
+          <button class="button button-secondary" id="cancel-edit" type="button">Cancel</button>
+          <button class="button button-primary" type="submit">Save changes</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+</body>
+</html>
