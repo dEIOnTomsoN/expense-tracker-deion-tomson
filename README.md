@@ -42,7 +42,7 @@ You can also right-click `index.html` and select:
 
 After opening the application:
 
-1. Create a local account.
+1. Create an account.
 2. Log in to the application.
 3. Open the dashboard.
 4. Add income and expense transactions.
